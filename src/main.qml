@@ -60,6 +60,7 @@ ApplicationWindow {
                 height: parent.height
                 Layout.fillWidth: true
                 Layout.fillHeight: true
+                model: backEnd.options
             }
         }
 

@@ -2,14 +2,16 @@
 import QtQuick.Layouts 2.1
 import QtQuick.Controls 2.15
 
-Frame {
+Item {
+    id: root
     width: parent.width
     Layout.fillWidth: true
     Layout.fillHeight: true
+    property var model
     
     ListView {
         id: listView
-        model: backEnd.options
+        model: root.model
         implicitWidth: parent.width * 0.95
         anchors.centerIn: parent
         implicitHeight: 200
