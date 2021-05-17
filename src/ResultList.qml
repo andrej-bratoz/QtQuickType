@@ -8,6 +8,7 @@ Item {
     Layout.fillWidth: true
     Layout.fillHeight: true
     property var model
+    property var viewModel
     
     ListView {
         id: listView
@@ -29,8 +30,13 @@ Item {
                 }
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: listView.currentIndex = index
-                    onDoubleClicked: listView.currentIndex = index
+                    onClicked: {
+                        listView.currentIndex = index
+                    }
+                    onDoubleClicked: {
+                        listView.currentIndex = index
+                        root.viewModel.selectedIndex = index
+                    }
                 }
             }
         }

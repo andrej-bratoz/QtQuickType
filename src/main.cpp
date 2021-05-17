@@ -5,7 +5,9 @@
 #include <memory>
 
 #include "quicktype.h"
+#include "win_hooks.h"
 
+BackEnd backend;
 
 int main(int argc, char* argv[])
 {
@@ -15,8 +17,7 @@ int main(int argc, char* argv[])
 
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
-    BackEnd backend;
-	
+    SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
     engine.rootContext()->setContextProperty("backEnd", &backend);
 
     const QUrl url(QStringLiteral("qrc:/main.qml"));

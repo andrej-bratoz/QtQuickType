@@ -3,7 +3,6 @@ import QtQuick.Window 2.15
 import QtQuick.Layouts
 import QtQuick.Controls
 
-
 ApplicationWindow {
     visible: true
     width: 400
@@ -34,18 +33,18 @@ ApplicationWindow {
             }
         }
 
-        Rectangle {
+        Item {
             id: r2
             Layout.row: 1
-            color: "transparent"
             Layout.fillWidth: true
             anchors.top: r1.bottom
             height: 30
-            Label {
+            TextArea {
                 width: parent.width *0.9
                 anchors.centerIn: r2
-                text : backEnd.command
-                color : "white"
+                readOnly : true
+                text : backEnd.currentProcess
+                color : "black"
             }
         }
 
@@ -61,6 +60,7 @@ ApplicationWindow {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 model: backEnd.options
+                viewModel : backEnd
             }
         }
 
