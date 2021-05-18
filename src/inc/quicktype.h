@@ -8,6 +8,7 @@
 #include <Shlwapi.h>
 #include <Windows.h>
 #include <utility>
+#include <Psapi.h>
 
 class BackEnd : public QObject
 {
@@ -103,7 +104,7 @@ inline QString GetFullProcessName(HWND handle)
 
 	GetWindowThreadProcessId(handle, &processId);
 	HANDLE phandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
-    QueryFullProcessImageNameW(phandle, 0, procName, &charsWritten);
+    GetProcessImageFileName(phandle, procName, MAX_PATH);
     CloseHandle(phandle);
     	
     const LPWSTR fileName = PathFindFileNameW(procName);
