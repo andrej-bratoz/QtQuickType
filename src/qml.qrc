@@ -1,6 +1,6 @@
 <RCC>
     <qresource prefix="/">
-        <file>ResultList.qml</file>
-        <file>main.qml</file>
+        <file>qml/main.qml</file>
+        <file>qml/ResultList.qml</file>
     </qresource>
 </RCC>

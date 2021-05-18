@@ -6,7 +6,7 @@ TEMPLATE = app
 TARGET = QtQuickType
 DESTDIR = ../x64/Debug
 CONFIG += debug \
-        qmltypes
+        qmltypes 
 LIBS += -L"."
 DEPENDPATH += .
 MOC_DIR += .

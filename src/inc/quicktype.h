@@ -5,8 +5,8 @@
 #include <QString>
 #include <QQmlContext>
 #include <qqml.h>
+#include <Shlwapi.h>
 #include <Windows.h>
-#include "quicktype.h"
 
 class BackEnd : public QObject
 {
@@ -48,12 +48,38 @@ signals:
 	
 
 private:
-    WINEVENTPROC m_proc;
+    WINEVENTPROC m_proc{};
     QString m_command;
     QString m_currentProcess;
     QList<QString> m_options;
-    int m_selectedIndex;
+    int m_selectedIndex = -1;
 };
 
+inline QString GetFullProcessName(HWND handle)
+{
+    DWORD processId;
+    wchar_t windowText[70];
+    wchar_t procName[1024];
+
+    ZeroMemory(windowText, 70 * sizeof(wchar_t));
+    ZeroMemory(procName, 1024 * sizeof(wchar_t));
+
+    const HWND foreground = GetForegroundWindow();
+    ////
+    GetWindowTextW(foreground, windowText, 70);
+    auto text = std::wstring(windowText);
+    text += L"...";
+	
+    GetWindowThreadProcessId(foreground, &processId);
+    GetModuleFileNameW(nullptr, procName, 1020);
+
+    const LPWSTR fileName = PathFindFileNameW(procName);
+
+    QString result(QString::fromWCharArray(text.c_str()));
+	result += " | ";
+    result += fileName;
+
+    return result;
+}
 
 #endif // BACKEND_H

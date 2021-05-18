@@ -2,9 +2,10 @@
 import QtQuick.Layouts 2.1
 import QtQuick.Controls 2.15
 
-Item {
+Frame {
     id: root
-    width: parent.width
+    width: parent.width * 0.95
+    anchors.centerIn: parent
     Layout.fillWidth: true
     Layout.fillHeight: true
     property var model

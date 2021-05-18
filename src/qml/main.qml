@@ -1,11 +1,12 @@
-import QtQuick 2.15
-import QtQuick.Window 2.15
+import QtQuick 2.0
+import QtQuick.Window 
 import QtQuick.Layouts
-import QtQuick.Controls
+import QtQuick.Controls 2.0
+
 
 ApplicationWindow {
     visible: true
-    width: 400
+    width: 600
     height: 300
     color: "#FF252525"
     title: qsTr("Qt QuickType")
@@ -15,6 +16,7 @@ ApplicationWindow {
         anchors.fill: parent
         Layout.fillHeight: true
         Layout.fillWidth: true
+        anchors.topMargin : 15
         columns: 1
         rows: 3
 
@@ -26,8 +28,9 @@ ApplicationWindow {
             Layout.fillWidth: true
             height: 30
             TextField {
-                width: parent.width *0.9
+                width: parent.width *0.95
                 text:backEnd.command
+                font.family: "Consolas"
                 onTextChanged: {backEnd.command = text}
                 anchors.centerIn: r1
             }
@@ -39,12 +42,11 @@ ApplicationWindow {
             Layout.fillWidth: true
             anchors.top: r1.bottom
             height: 30
-            TextArea {
-                width: parent.width *0.9
+            Label {
+                width: parent.width *0.95
                 anchors.centerIn: r2
-                readOnly : true
                 text : backEnd.currentProcess
-                color : "black"
+                color : "white"
             }
         }
 

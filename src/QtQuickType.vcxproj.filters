@@ -25,37 +25,49 @@
     <QtRcc Include="qml.qrc">
       <Filter>Resource Files</Filter>
     </QtRcc>
-    <ClCompile Include="quicktype.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ResultList.qml">
-      <Filter>Qml</Filter>
-    </None>
-    <None Include="main.qml">
-      <Filter>Qml</Filter>
-    </None>
     <None Include="QtQuickType.pro">
       <Filter>Resource Files</Filter>
     </None>
     <None Include="QtQuickType.pri">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="qml\main.qml">
+      <Filter>Qml</Filter>
+    </None>
+    <None Include="qml\ResultList.qml">
+      <Filter>Qml</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="quicktype.h">
-      <Filter>Header Files</Filter>
-    </QtMoc>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="main.cpp">
+    <ClCompile Include="cpp\quicktype.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cpp\qt_objects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="win_hooks.h">
+    <ClInclude Include="inc\win_hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="inc\xml_reader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\qt_objects.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="inc\quicktype.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="index.xml" />
   </ItemGroup>
 </Project>

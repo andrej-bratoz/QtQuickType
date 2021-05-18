@@ -1,8 +1,12 @@
-#include "quicktype.h"
+#include "../inc/quicktype.h"
 
-BackEnd::BackEnd(QObject* parent) : QObject(parent), m_command(""),
-	m_selectedIndex(-1)
+
+
+
+BackEnd::BackEnd(QObject* parent) : QObject(parent), m_command(""), m_proc(nullptr)
 {
+    const QString result(GetFullProcessName(GetForegroundWindow()));
+	setCurrentProcess(result);
 }
 
 QString BackEnd::command() const{
@@ -56,7 +60,5 @@ void BackEnd::clearCommandList()
 void BackEnd::handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook, uint eventType, HWND hwnd, LONG idObject,
 	LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime)
 {
-    char title[1024];
-    GetWindowTextA(hwnd, title, 1024);
-    setCurrentProcess(title);
+    setCurrentProcess(GetFullProcessName(hwnd));
 }

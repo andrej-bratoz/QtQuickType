@@ -3,9 +3,11 @@
 #include <QQmlContext>
 #include <QStringListModel>
 #include <memory>
+#include <QDir>
 
-#include "quicktype.h"
-#include "win_hooks.h"
+#include "../inc/qt_objects.h"
+#include "../inc/quicktype.h"
+#include "../inc/win_hooks.h"
 
 BackEnd backend;
 
@@ -15,12 +17,19 @@ int main(int argc, char* argv[])
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
+    
     QGuiApplication app(argc, argv);
     QQmlApplicationEngine engine;
+
+    QDir::setCurrent(qApp->applicationDirPath());
+    const Index index("index.xml");
+    CommandList list(index);
+	
     SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
     engine.rootContext()->setContextProperty("backEnd", &backend);
 
-    const QUrl url(QStringLiteral("qrc:/main.qml"));
+
+    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
         &app, [url](QObject* obj, const QUrl& objUrl) {
             if (!obj && url == objUrl)
