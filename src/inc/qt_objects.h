@@ -14,6 +14,10 @@ class Index
 public:
 	Index(QString path);
 	QList<QString> _configurations;
+	bool IsValid() const;
+
+private:
+	bool m_isValid;
 };
 
 class Command

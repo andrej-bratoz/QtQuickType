@@ -7,6 +7,7 @@
 #include <qqml.h>
 #include <Shlwapi.h>
 #include <Windows.h>
+#include <utility>
 
 class BackEnd : public QObject
 {
@@ -55,24 +56,56 @@ private:
     int m_selectedIndex = -1;
 };
 
+inline HWND FindTopWindow(DWORD pid)
+{
+    std::pair<HWND, DWORD> params = { 0, pid };
+
+    // Enumerate the windows using a lambda to process each window
+    BOOL bResult = EnumWindows([](HWND hwnd, LPARAM lParam) -> BOOL
+        {
+            auto pParams = (std::pair<HWND, DWORD>*)(lParam);
+
+            DWORD processId;
+            if (GetWindowThreadProcessId(hwnd, &processId) && processId == pParams->second)
+            {
+                // Stop enumerating
+                SetLastError(-1);
+                pParams->first = hwnd;
+                return FALSE;
+            }
+
+            // Continue enumerating
+            return TRUE;
+        }, (LPARAM)&params);
+
+    if (!bResult && GetLastError() == -1 && params.first)
+    {
+        return params.first;
+    }
+
+    return 0;
+}
+
 inline QString GetFullProcessName(HWND handle)
 {
     DWORD processId;
+    DWORD charsWritten = 0;
     wchar_t windowText[70];
-    wchar_t procName[1024];
+    wchar_t procName[MAX_PATH];
 
     ZeroMemory(windowText, 70 * sizeof(wchar_t));
-    ZeroMemory(procName, 1024 * sizeof(wchar_t));
+    ZeroMemory(procName, MAX_PATH * sizeof(wchar_t));
 
-    const HWND foreground = GetForegroundWindow();
     ////
-    GetWindowTextW(foreground, windowText, 70);
+    GetWindowTextW(handle, windowText, 70);
     auto text = std::wstring(windowText);
     text += L"...";
-	
-    GetWindowThreadProcessId(foreground, &processId);
-    GetModuleFileNameW(nullptr, procName, 1020);
 
+	GetWindowThreadProcessId(handle, &processId);
+	HANDLE phandle = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
+    QueryFullProcessImageNameW(phandle, 0, procName, &charsWritten);
+    CloseHandle(phandle);
+    	
     const LPWSTR fileName = PathFindFileNameW(procName);
 
     QString result(QString::fromWCharArray(text.c_str()));
@@ -81,5 +114,6 @@ inline QString GetFullProcessName(HWND handle)
 
     return result;
 }
+
 
 #endif // BACKEND_H

@@ -23,18 +23,25 @@ int main(int argc, char* argv[])
 
     QDir::setCurrent(qApp->applicationDirPath());
     const Index index("index.xml");
-    CommandList list(index);
-	
-    SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
-    engine.rootContext()->setContextProperty("backEnd", &backend);
+    if (index.IsValid())
+    {
+	    CommandList list(index);
+	    SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
+	    engine.rootContext()->setContextProperty("backEnd", &backend);
 
 
-    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
-    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
-        &app, [url](QObject* obj, const QUrl& objUrl) {
-            if (!obj && url == objUrl)
-                QCoreApplication::exit(-1);
-        }, Qt::QueuedConnection);
-    engine.load(url);
-    return app.exec();
+	    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
+	    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
+	        &app, [url](QObject* obj, const QUrl& objUrl) {
+	            if (!obj && url == objUrl)
+	                QCoreApplication::exit(-1);
+	        }, Qt::QueuedConnection);
+	    engine.load(url);
+	    return app.exec();
+    }
+	else
+	{
+		MessageBox(nullptr, L"Cannot find file 'index.xml' in root folder. Application will exit.", L"Critical file missing", MB_OK | MB_ICONERROR);
+	}
+
 }

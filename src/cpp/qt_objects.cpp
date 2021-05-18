@@ -9,6 +9,11 @@
 Index::Index(QString path)
 {
 	QFile file(path);
+	if (!file.exists(path)) {
+		m_isValid = false;
+		return;
+	}
+	m_isValid = true;
 	file.open(QIODeviceBase::ReadOnly);
 	QXmlStreamReader xml;
 	xml.setDevice(&file);
@@ -30,9 +35,14 @@ Index::Index(QString path)
 	file.close();
 }
 
+bool Index::IsValid() const
+{
+	return m_isValid;
+}
+
 
 Command::Command(QString path) : m_Cmd(""),m_Name(""), m_Parameter(""),
-                     m_Additional(""), m_Type(""), m_Winctx(""), m_Keys("")
+                                 m_Additional(""), m_Type(""), m_Winctx(""), m_Keys("")
 {
 
 	QFile file(path);
