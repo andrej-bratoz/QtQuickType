@@ -27,9 +27,9 @@ int main(int argc, char* argv[])
     {
 	    CommandList list(index);
 	    SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
+		backend.RegisterCmdIndex(&list);
 	    engine.rootContext()->setContextProperty("backEnd", &backend);
-
-
+		
 	    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
 	    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
 	        &app, [url](QObject* obj, const QUrl& objUrl) {

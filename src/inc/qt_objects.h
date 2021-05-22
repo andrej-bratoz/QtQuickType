@@ -3,11 +3,27 @@
 
 #define QSTRING_PROP(name) \
 	public: \
-	QString Get##name() {return m_##name;} \
+	QString Get##name() const {return m_##name;} \
 	void Set##name(QString value) {m_##name = value;} \
 	private: \
 	QString m_##name;
+
+#define QBOOL_PROP(name) \
+	public: \
+	bool Get##name() const {return m_##name;} \
+	void Set##name(bool value) {m_##name = value;} \
+	private: \
+	bool m_##name;
 	
+
+enum class CommandTypeEnum
+{
+	Unknown,
+	WinCreate,
+	Keys,
+	SpawnProcess
+};
+
 
 class Index
 {
@@ -24,18 +40,26 @@ class Command
 {
 public:
 	Command(QString path);
-	QSTRING_PROP(Cmd)
+	void ReadCommandFromFile();
+
 	QSTRING_PROP(Name)
+	QSTRING_PROP(Cmd)
 	QSTRING_PROP(Parameter)
-	QSTRING_PROP(Additional)
 	QSTRING_PROP(Type)
-	QSTRING_PROP(Winctx)
-	QSTRING_PROP(Keys)
+	QBOOL_PROP(Show)
+	QSTRING_PROP(SendKeys)
 public:
 	bool IsValid() const;
+	void AddCommand();
+	CommandTypeEnum ActualType() const { return m_typeEnum; }
+	void SetActualType(CommandTypeEnum value) { m_typeEnum = value; }
+	[[nodiscard]] std::vector<Command> GetCommands() const { return m_commands; }
 
 private:
 	bool m_isValid;
+	QString m_path;
+	std::vector<Command> m_commands;
+	CommandTypeEnum m_typeEnum;
 };
 
 class CommandList
@@ -43,6 +67,7 @@ class CommandList
 public:
 	explicit CommandList(const Index& index);
 	void AddCommand(Command cmd);
+	[[nodiscard]] std::vector<Command> FindCommand(const QString& name) const;
 private:
 	QList<Command> _commands;
 };

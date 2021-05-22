@@ -9,6 +9,9 @@
 #include <Windows.h>
 #include <utility>
 #include <Psapi.h>
+#include "qt_objects.h"
+
+
 
 class BackEnd : public QObject
 {
@@ -26,6 +29,7 @@ public:
     QString currentProcess() const;
     QList<QString> options() const;
     int selectedIndex() const;
+    void RegisterCmdIndex(CommandList* index);
 	
 	//
     void setCommand(const QString& command);
@@ -50,6 +54,7 @@ signals:
 	
 
 private:
+    CommandList* m_index;
     WINEVENTPROC m_proc{};
     QString m_command;
     QString m_currentProcess;

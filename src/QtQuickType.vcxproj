@@ -127,9 +127,6 @@
     <ClInclude Include="inc\win_hooks.h" />
     <ClInclude Include="inc\xml_reader.h" />
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="index.xml" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
     <Import Project="$(QtMsBuild)\qt.targets" />

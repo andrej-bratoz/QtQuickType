@@ -18,6 +18,14 @@ void BackEnd::setCommand(const QString& command)
     if (command == m_command) return;
     if (command.isEmpty()) clearCommandList();
     m_command = command;
+
+    auto commands = m_index->FindCommand(command);
+    m_options.clear();
+	for (auto& cmd : commands)
+	{
+		if(cmd.GetShow()) m_options.append(cmd.GetName());
+	}
+
     emit onOptionsChanged();	
     emit onCommandChanged();
 }
@@ -34,6 +42,11 @@ QList<QString> BackEnd::options() const
 int BackEnd::selectedIndex() const
 {
     return m_selectedIndex;
+}
+
+void BackEnd::RegisterCmdIndex(CommandList* index)
+{
+    m_index = index;
 }
 
 void BackEnd::setCurrentProcess(const QString& currentProcess) {

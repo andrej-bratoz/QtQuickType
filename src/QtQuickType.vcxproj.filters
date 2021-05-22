@@ -67,7 +67,4 @@
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="index.xml" />
-  </ItemGroup>
 </Project>
