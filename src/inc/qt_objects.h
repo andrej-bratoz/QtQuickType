@@ -43,6 +43,7 @@ public:
 	void ReadCommandFromFile();
 
 	QSTRING_PROP(Name)
+	QSTRING_PROP(ProcessFilter)
 	QSTRING_PROP(Cmd)
 	QSTRING_PROP(Parameter)
 	QSTRING_PROP(Type)

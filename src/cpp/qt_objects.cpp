@@ -41,9 +41,10 @@ bool Index::IsValid() const
 }
 
 
-Command::Command(QString path) : m_Name(""),m_Cmd(""), m_Parameter(""),
-									m_Type(""),m_Show(true),m_SendKeys(""),
-									m_path(path), m_typeEnum(CommandTypeEnum::Unknown)
+Command::Command(QString path) : m_Name(""),m_ProcessFilter(""), m_Cmd(""),
+									m_Parameter(""),m_Type(""),m_Show(true),
+									m_SendKeys(""), m_isValid(false), m_path(std::move(path)),
+									m_typeEnum(CommandTypeEnum::Unknown)
 {
 
 	
@@ -86,6 +87,9 @@ void Command::ReadCommandFromFile()
 				if (xml.attributes().hasAttribute("sendkeys"))
 					SetSendKeys(xml.attributes().value("sendkeys").toString());
 
+				if (xml.attributes().hasAttribute("procfilter"))
+					SetSendKeys(xml.attributes().value("procfiler").toString());
+
 				if (GetType() == "wincreate") SetActualType(CommandTypeEnum::WinCreate);
 				else if (GetType() == "keys") SetActualType(CommandTypeEnum::Keys);
 				else if (GetType() == "spawnproc") SetActualType(CommandTypeEnum::SpawnProcess);
@@ -114,6 +118,7 @@ void Command::AddCommand()
 	cmd.SetParameter(this->GetParameter());
 	cmd.SetShow(this->GetShow());
 	cmd.SetType(this->GetType());
+	cmd.SetProcessFilter(this->GetProcessFilter());
 	cmd.SetActualType(this->ActualType());
 	this->m_commands.push_back(cmd);
 }
