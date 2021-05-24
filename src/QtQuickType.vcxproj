@@ -113,6 +113,7 @@
     </ClCompile>
     <ClCompile Include="cpp\qt_objects.cpp" />
     <ClCompile Include="cpp\quicktype.cpp" />
+    <ClCompile Include="ext\SendKeys.cpp" />
     <None Include="QtQuickType.pri" />
     <None Include="QtQuickType.pro" />
     <None Include="qml\ResultList.qml" />
@@ -123,6 +124,7 @@
     <QtMoc Include="inc\quicktype.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ext\SendKeys.h" />
     <ClInclude Include="inc\qt_objects.h" />
     <ClInclude Include="inc\win_hooks.h" />
     <ClInclude Include="inc\xml_reader.h" />

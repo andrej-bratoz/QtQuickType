@@ -21,13 +21,20 @@ void BackEnd::setCommand(const QString& command)
 
     auto commands = m_index->FindCommand(command);
     m_options.clear();
+    m_commands.clear();
 	for (auto& cmd : commands)
 	{
-		if(cmd.GetShow()) m_options.append(cmd.GetName());
+        if (cmd.GetShow()) {
+            m_options.append(cmd.GetName());
+            m_commands.append(cmd);
+        }
 	}
+
+    if (m_commands.count() > 0) setSelectedIndex(0);
 
     emit onOptionsChanged();	
     emit onCommandChanged();
+    emit onCommandsChanged();
 }
 
 QString BackEnd::currentProcess() const {
@@ -59,7 +66,6 @@ void BackEnd::setSelectedIndex(int index)
 {
     if (m_selectedIndex == index) return;
     m_selectedIndex = index;
-    setCurrentProcess("Current Selection: " + QString::number(index));
     emit onOptionSelected(index);
 }
 
@@ -74,4 +80,5 @@ void BackEnd::handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook, uint e
 	LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime)
 {
     setCurrentProcess(GetFullProcessName(hwnd));
+	m_activeWindow = GetTopWindow(hwnd);
 }

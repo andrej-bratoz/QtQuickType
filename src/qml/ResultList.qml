@@ -1,4 +1,4 @@
-﻿import QtQuick 2.0
+﻿import QtQuick
 import QtQuick.Layouts 2.1
 import QtQuick.Controls 2.15
 
@@ -48,6 +48,6 @@ Frame {
             }
         }
         focus: true
-        onCurrentItemChanged: console.log(listView.currentIndex)
+        onCurrentItemChanged:  console.log("SELECTED_INDEX " + listView.currentIndex)
     }
 }

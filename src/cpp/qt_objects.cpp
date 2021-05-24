@@ -3,7 +3,10 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QDir>
+#include <Windows.h>
+#include "../ext/SendKeys.h"
 #include "../inc/qt_objects.h"
+
 
 
 Index::Index(QString path)
@@ -88,7 +91,7 @@ void Command::ReadCommandFromFile()
 					SetSendKeys(xml.attributes().value("sendkeys").toString());
 
 				if (xml.attributes().hasAttribute("procfilter"))
-					SetSendKeys(xml.attributes().value("procfiler").toString());
+					SetProcessFilter(xml.attributes().value("procfiler").toString());
 
 				if (GetType() == "wincreate") SetActualType(CommandTypeEnum::WinCreate);
 				else if (GetType() == "keys") SetActualType(CommandTypeEnum::Keys);
@@ -123,7 +126,21 @@ void Command::AddCommand()
 	this->m_commands.push_back(cmd);
 }
 
-// BUG ONLY LAST COMMAND IS READ!!
+void Command::Execute(HWND activeWindow) const
+{
+	if(ActualType() == CommandTypeEnum::Keys)
+	{
+		CSendKeys sk;
+		const QString name3 = GetName();
+		const QString keys = GetSendKeys();
+		const std::wstring name(keys.toStdWString());
+		const LPCTSTR string = name.c_str();
+		CSendKeys::AppActivate(activeWindow);
+		sk.SendKeys(string, true);
+	}
+}
+
+
 CommandList::CommandList(const Index& index)
 {
 	for(const auto& item : index._configurations)

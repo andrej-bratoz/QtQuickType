@@ -25,11 +25,24 @@ class BackEnd : public QObject
 public:
     explicit BackEnd(QObject* parent = nullptr);
     //
+    QList<Command> commands() const { return m_commands; }
     QString command() const;
     QString currentProcess() const;
     QList<QString> options() const;
     int selectedIndex() const;
     void RegisterCmdIndex(CommandList* index);
+
+    Q_INVOKABLE QString activeCommand()
+    {
+	    return (m_commands[selectedIndex()].GetName());
+    }
+
+	Q_INVOKABLE void ExecCurrentCmd()
+    {
+        if (selectedIndex() < 0) return;
+        if (selectedIndex() >= m_commands.count()) return;
+        m_commands[selectedIndex()].Execute(m_activeWindow);
+    }
 	
 	//
     void setCommand(const QString& command);
@@ -51,6 +64,7 @@ signals:
     void onCommandChanged();
     void onCurrentProcessChanged();
     void onOptionSelected(int index);
+    void onCommandsChanged();
 	
 
 private:
@@ -59,7 +73,9 @@ private:
     QString m_command;
     QString m_currentProcess;
     QList<QString> m_options;
+    QList<Command> m_commands;
     int m_selectedIndex = -1;
+    HWND m_activeWindow;
 };
 
 inline HWND FindTopWindow(DWORD pid)

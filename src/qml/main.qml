@@ -33,6 +33,15 @@ ApplicationWindow {
                 font.family: "Consolas"
                 onTextChanged: {backEnd.command = text}
                 anchors.centerIn: r1
+                Keys.onDownPressed : {
+                    backEnd.selectedIndex++
+                }
+                Keys.onUpPressed : {
+                }
+                 Keys.onReturnPressed : {
+                    backEnd.ExecCurrentCmd();
+                }
+                
             }
         }
 
@@ -58,6 +67,7 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             ResultList {
+                id: resultList
                 height: parent.height
                 Layout.fillWidth: true
                 Layout.fillHeight: true

@@ -14,6 +14,8 @@
 	void Set##name(bool value) {m_##name = value;} \
 	private: \
 	bool m_##name;
+
+
 	
 
 enum class CommandTypeEnum
@@ -49,12 +51,14 @@ public:
 	QSTRING_PROP(Type)
 	QBOOL_PROP(Show)
 	QSTRING_PROP(SendKeys)
+
 public:
 	bool IsValid() const;
 	void AddCommand();
 	CommandTypeEnum ActualType() const { return m_typeEnum; }
 	void SetActualType(CommandTypeEnum value) { m_typeEnum = value; }
 	[[nodiscard]] std::vector<Command> GetCommands() const { return m_commands; }
+	void Execute(HWND activeWindow) const;
 
 private:
 	bool m_isValid;
