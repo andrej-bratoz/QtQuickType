@@ -59,6 +59,65 @@ Todo
 
 */
 
+/*
+ *
+	Key	Code
+	BACKSPACE	{BACKSPACE}, {BS}, or {BKSP}
+	BREAK	{BREAK}
+	CAPS LOCK	{CAPSLOCK}
+	DEL or DELETE	{DELETE} or {DEL}
+	DOWN ARROW	{DOWN}
+	END	{END}
+	ENTER	{ENTER} or ~
+	ESC	{ESC}
+	HELP	{HELP}
+	HOME	{HOME}
+	INS or INSERT	{INS}
+	LEFT ARROW	{LEFT}
+	NUM LOCK	{NUMLOCK}
+	PAGE DOWN	{PGDN}
+	PAGE UP	{PGUP}
+	PRINT SCREEN	{PRTSC} (reserved for future use)
+	RIGHT ARROW	{RIGHT}
+	SCROLL LOCK	{SCROLL}
+	TAB	{TAB}
+	UP ARROW	{UP}
+	F1	{F1}
+	F2	{F2}
+	F3	{F3}
+	F4	{F4}
+	F5	{F5}
+	F6	{F6}
+	F7	{F7}
+	F8	{F8}
+	F9	{F9}
+	F10	{F10}
+	F11	{F11}
+	F12	{F12}
+	F13	{F13}
+	F14	{F14}
+	F15	{F15}
+	F16	{F16}
+	Keypad add	{ADD}
+	Keypad subtract	{SUBTRACT}
+	Keypad multiply	{MULTIPLY}
+	Keypad divide	{DIVIDE}
+	(table 1.a)
+	The following are my additions:
+
+	Key	Code
+	+	{PLUS}
+	@	{AT}
+	APPS	{APPS}
+	^	{CARET}
+	~	{TILDE}
+	{ }	{LEFTBRACE} {RIGHTBRACE}
+	( )	{LEFTPAREN} {RIGHTPAREN}
+	Left/Right WINKEY	{LWIN} {RWIN}
+	WINKEY	{WIN} equivalent to {LWIN}
+ * 
+ */
+
 const WORD CSendKeys::VKKEYSCANSHIFTON = 0x01;
 const WORD CSendKeys::VKKEYSCANCTRLON  = 0x02;
 const WORD CSendKeys::VKKEYSCANALTON   = 0x04;

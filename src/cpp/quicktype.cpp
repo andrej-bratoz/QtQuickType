@@ -3,7 +3,11 @@
 
 
 
-BackEnd::BackEnd(QObject* parent) : QObject(parent), m_command(""), m_proc(nullptr)
+BackEnd::BackEnd(QObject* parent) : QObject(parent),
+								m_index(nullptr),
+								m_proc(nullptr),
+								m_command(""),
+								m_activeWindow(nullptr)
 {
     const QString result(GetFullProcessName(GetForegroundWindow()));
 	setCurrentProcess(result);
@@ -15,6 +19,17 @@ QString BackEnd::command() const{
 
 void BackEnd::setCommand(const QString& command)
 {
+    if(command.isEmpty())
+    {
+        m_commands.clear();
+        m_options.clear();
+        m_command = "";
+        m_selectedIndex = -1;
+        clearCommandList();
+        emit onOptionsChanged();
+    	return;
+    }
+	
     if (command == m_command) return;
     if (command.isEmpty()) clearCommandList();
     m_command = command;
@@ -30,11 +45,15 @@ void BackEnd::setCommand(const QString& command)
         }
 	}
 
-    if (m_commands.count() > 0) setSelectedIndex(0);
+    if (m_commands.count() > 0)
+        setSelectedIndex(0);
+    else if (m_commands.count() == 0)
+        setSelectedIndex(-1);
 
     emit onOptionsChanged();	
     emit onCommandChanged();
     emit onCommandsChanged();
+    emit onCountChanged();
 }
 
 QString BackEnd::currentProcess() const {
@@ -65,6 +84,8 @@ void BackEnd::setCurrentProcess(const QString& currentProcess) {
 void BackEnd::setSelectedIndex(int index)
 {
     if (m_selectedIndex == index) return;
+    if (index >= count()) return;
+    if (index < 0) return;
     m_selectedIndex = index;
     emit onOptionSelected(index);
 }
@@ -78,7 +99,10 @@ void BackEnd::clearCommandList()
 
 void BackEnd::handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook, uint eventType, HWND hwnd, LONG idObject,
 	LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime)
-{
+{   
     setCurrentProcess(GetFullProcessName(hwnd));
-	m_activeWindow = GetTopWindow(hwnd);
+    DWORD processId;
+    GetWindowThreadProcessId(hwnd, &processId);
+	
+ 	m_activeWindow = FindTopWindow(processId);
 }

@@ -20,6 +20,7 @@ class BackEnd : public QObject
     Q_PROPERTY(QString currentProcess READ currentProcess WRITE setCurrentProcess NOTIFY onCurrentProcessChanged)
     Q_PROPERTY(QList<QString> options READ options NOTIFY onOptionsChanged)
 	Q_PROPERTY(int selectedIndex READ selectedIndex WRITE setSelectedIndex NOTIFY onOptionSelected)
+    Q_PROPERTY(int count READ count NOTIFY onCountChanged)
     QML_ELEMENT
 
 public:
@@ -30,6 +31,7 @@ public:
     QString currentProcess() const;
     QList<QString> options() const;
     int selectedIndex() const;
+    int count() const { return m_commands.count(); }
     void RegisterCmdIndex(CommandList* index);
 
     Q_INVOKABLE QString activeCommand()
@@ -65,47 +67,46 @@ signals:
     void onCurrentProcessChanged();
     void onOptionSelected(int index);
     void onCommandsChanged();
+    void onCountChanged();
 	
 
 private:
-    CommandList* m_index;
+    CommandList* m_index{};
     WINEVENTPROC m_proc{};
     QString m_command;
     QString m_currentProcess;
     QList<QString> m_options;
     QList<Command> m_commands;
     int m_selectedIndex = -1;
-    HWND m_activeWindow;
+    HWND m_activeWindow{};
 };
 
 inline HWND FindTopWindow(DWORD pid)
 {
-    std::pair<HWND, DWORD> params = { 0, pid };
+    std::pair<HWND, DWORD> params = { nullptr, pid };
 
     // Enumerate the windows using a lambda to process each window
-    BOOL bResult = EnumWindows([](HWND hwnd, LPARAM lParam) -> BOOL
+    const BOOL bResult = EnumWindows([](HWND hwnd, LPARAM lParam) -> BOOL
+    {
+	    auto* const pParams = reinterpret_cast<std::pair<HWND, DWORD>*>(lParam);
+        DWORD processId;
+        if (GetWindowThreadProcessId(hwnd, &processId) && processId == pParams->second)
         {
-            auto pParams = (std::pair<HWND, DWORD>*)(lParam);
-
-            DWORD processId;
-            if (GetWindowThreadProcessId(hwnd, &processId) && processId == pParams->second)
-            {
-                // Stop enumerating
-                SetLastError(-1);
-                pParams->first = hwnd;
-                return FALSE;
-            }
-
-            // Continue enumerating
-            return TRUE;
-        }, (LPARAM)&params);
+            // Stop enumerating
+            SetLastError(-1);
+            pParams->first = hwnd;
+            return FALSE;
+        }
+        // Continue enumerating
+        return TRUE;
+        }, reinterpret_cast<LPARAM>(&params));
 
     if (!bResult && GetLastError() == -1 && params.first)
     {
         return params.first;
     }
 
-    return 0;
+    return nullptr;
 }
 
 inline QString GetFullProcessName(HWND handle)

@@ -16,6 +16,7 @@ Frame {
         model: root.model
         implicitWidth: parent.width * 0.95
         anchors.centerIn: parent
+        currentIndex : backEnd.selectedIndex
         implicitHeight: 200
         topMargin: 5
         clip: true
@@ -39,6 +40,11 @@ Frame {
                         root.viewModel.selectedIndex = index
                     }
                 }
+                Connections{
+                    
+                }
+
+
             }
         }
         highlight: Rectangle {
@@ -48,6 +54,7 @@ Frame {
             }
         }
         focus: true
+        highlightFollowsCurrentItem: true
         onCurrentItemChanged:  console.log("SELECTED_INDEX " + listView.currentIndex)
     }
 }

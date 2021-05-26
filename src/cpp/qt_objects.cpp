@@ -135,6 +135,9 @@ void Command::Execute(HWND activeWindow) const
 		const QString keys = GetSendKeys();
 		const std::wstring name(keys.toStdWString());
 		const LPCTSTR string = name.c_str();
+		wchar_t title[1024];
+		GetWindowTextW(activeWindow, title, 1024);
+		qDebug() << QString::fromWCharArray(L"Active Window: ") << QString::fromWCharArray(title);
 		CSendKeys::AppActivate(activeWindow);
 		sk.SendKeys(string, true);
 	}

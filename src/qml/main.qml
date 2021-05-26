@@ -37,6 +37,7 @@ ApplicationWindow {
                     backEnd.selectedIndex++
                 }
                 Keys.onUpPressed : {
+                    backEnd.selectedIndex--
                 }
                  Keys.onReturnPressed : {
                     backEnd.ExecCurrentCmd();
