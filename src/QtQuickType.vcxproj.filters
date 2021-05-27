@@ -33,10 +33,10 @@
     <None Include="QtQuickType.pri">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="qml\main.qml">
+    <None Include="qml\ResultView.qml">
       <Filter>Qml</Filter>
     </None>
-    <None Include="qml\ResultList.qml">
+    <None Include="qml\Window.qml">
       <Filter>Qml</Filter>
     </None>
   </ItemGroup>
@@ -47,10 +47,10 @@
     <ClCompile Include="cpp\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="cpp\qt_objects.cpp">
+    <ClCompile Include="ext\SendKeys.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ext\SendKeys.cpp">
+    <ClCompile Include="cpp\xml_objects.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -58,13 +58,10 @@
     <ClInclude Include="inc\win_hooks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\xml_reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\qt_objects.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="ext\SendKeys.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\xml_objects.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

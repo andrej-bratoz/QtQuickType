@@ -5,11 +5,11 @@
 #include <memory>
 #include <QDir>
 
-#include "../inc/qt_objects.h"
+#include "../inc/xml_objects.h"
 #include "../inc/quicktype.h"
 #include "../inc/win_hooks.h"
 
-BackEnd backend;
+QuickTypeBL quickType;
 
 int main(int argc, char* argv[])
 {
@@ -23,14 +23,14 @@ int main(int argc, char* argv[])
 
     QDir::setCurrent(qApp->applicationDirPath());
     const Index index("index.xml");
-    if (index.IsValid())
+    if (index.isValid())
     {
 	    CommandList list(index);
 	    SetWindowsEventHook_ForegroundWindow(WindowsEventHook_CallBack);
-		backend.RegisterCmdIndex(&list);
-	    engine.rootContext()->setContextProperty("backEnd", &backend);
+		quickType.registerCmdIndex(&list);
+	    engine.rootContext()->setContextProperty("quickType", &quickType);
 		
-	    const QUrl url(QStringLiteral("qrc:/qml/main.qml"));
+	    const QUrl url(QStringLiteral("qrc:/qml/Window.qml"));
 	    QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
 	        &app, [url](QObject* obj, const QUrl& objUrl) {
 	            if (!obj && url == objUrl)
@@ -39,9 +39,5 @@ int main(int argc, char* argv[])
 	    engine.load(url);
 	    return app.exec();
     }
-	else
-	{
-		MessageBox(nullptr, L"Cannot find file 'index.xml' in root folder. Application will exit.", L"Critical file missing", MB_OK | MB_ICONERROR);
-	}
-
+    MessageBox(nullptr, L"Cannot find file 'index.xml' in root folder. Application will exit.", L"Critical file missing", MB_OK | MB_ICONERROR);
 }

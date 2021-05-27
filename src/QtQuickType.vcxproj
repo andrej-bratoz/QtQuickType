@@ -111,23 +111,22 @@
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
-    <ClCompile Include="cpp\qt_objects.cpp" />
+    <ClCompile Include="cpp\xml_objects.cpp" />
     <ClCompile Include="cpp\quicktype.cpp" />
     <ClCompile Include="ext\SendKeys.cpp" />
     <None Include="QtQuickType.pri" />
     <None Include="QtQuickType.pro" />
-    <None Include="qml\ResultList.qml" />
+    <None Include="qml\ResultView.qml" />
     <QtRcc Include="qml.qrc" />
-    <None Include="qml\main.qml" />
+    <None Include="qml\Window.qml" />
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="inc\quicktype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ext\SendKeys.h" />
-    <ClInclude Include="inc\qt_objects.h" />
+    <ClInclude Include="inc\xml_objects.h" />
     <ClInclude Include="inc\win_hooks.h" />
-    <ClInclude Include="inc\xml_reader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

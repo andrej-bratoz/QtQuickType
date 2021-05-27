@@ -1,18 +1,19 @@
 #include <QXmlStreamReader>
-#include <QCoreApplication>
 #include <QFile>
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QDir>
 #include <Windows.h>
 #include "../ext/SendKeys.h"
-#include "../inc/qt_objects.h"
+#include "../inc/xml_objects.h"
 
+// INDEX
 
-
-Index::Index(QString path)
+Index::Index(const QString& path)
 {
 	QFile file(path);
-	if (!file.exists(path)) {
+	if (!QFile::exists(path))
+	{
 		m_isValid = false;
 		return;
 	}
@@ -21,7 +22,7 @@ Index::Index(QString path)
 	QXmlStreamReader xml;
 	xml.setDevice(&file);
 	xml.readNext();
-	while(!xml.isEndDocument())
+	while (!xml.isEndDocument())
 	{
 		if (xml.isStartElement())
 		{
@@ -33,27 +34,25 @@ Index::Index(QString path)
 				_configurations.append(fullPath);
 			}
 		}
-        xml.readNext();
+		xml.readNext();
 	}
 	file.close();
 }
 
-bool Index::IsValid() const
+bool Index::isValid() const
 {
 	return m_isValid;
 }
 
-
-Command::Command(QString path) : m_Name(""),m_ProcessFilter(""), m_Cmd(""),
-									m_Parameter(""),m_Type(""),m_Show(true),
-									m_SendKeys(""), m_isValid(false), m_path(std::move(path)),
-									m_typeEnum(CommandTypeEnum::Unknown)
+// COMMAND
+Command::Command(QString path) : m_Name(""), m_ProcessFilter(""), m_Cmd(""),
+                                 m_Parameter(""), m_Type(""), m_Show(true),
+                                 m_SendKeys(""), m_isValid(false), m_path(std::move(path)),
+                                 m_typeEnum(CommandTypeEnum::Unknown)
 {
-
-	
 }
 
-void Command::ReadCommandFromFile()
+void Command::readCommandFromFile()
 {
 	QFile file(m_path);
 	if (!QFile::exists(m_path))
@@ -93,11 +92,11 @@ void Command::ReadCommandFromFile()
 				if (xml.attributes().hasAttribute("procfilter"))
 					SetProcessFilter(xml.attributes().value("procfiler").toString());
 
-				if (GetType() == "wincreate") SetActualType(CommandTypeEnum::WinCreate);
-				else if (GetType() == "keys") SetActualType(CommandTypeEnum::Keys);
-				else if (GetType() == "spawnproc") SetActualType(CommandTypeEnum::SpawnProcess);
-								
-				if(GetShow()) AddCommand();
+				if (GetType() == "wincreate") setActualType(CommandTypeEnum::WinCreate);
+				else if (GetType() == "keys") setActualType(CommandTypeEnum::Keys);
+				else if (GetType() == "spawnproc") setActualType(CommandTypeEnum::SpawnProcess);
+
+				if (GetShow()) addCommand();
 			}
 		}
 		xml.readNext();
@@ -106,14 +105,14 @@ void Command::ReadCommandFromFile()
 	file.close();
 }
 
-bool Command::IsValid() const
+bool Command::isValid() const
 {
 	return m_isValid;
 }
 
-void Command::AddCommand()
+void Command::addCommand()
 {
-	if (this->ActualType() == CommandTypeEnum::Unknown) return;	
+	if (this->getActualType() == CommandTypeEnum::Unknown) return;
 	Command cmd(m_path);
 	cmd.SetSendKeys(this->GetSendKeys());
 	cmd.SetCmd(this->GetCmd());
@@ -122,13 +121,28 @@ void Command::AddCommand()
 	cmd.SetShow(this->GetShow());
 	cmd.SetType(this->GetType());
 	cmd.SetProcessFilter(this->GetProcessFilter());
-	cmd.SetActualType(this->ActualType());
+	cmd.setActualType(this->getActualType());
 	this->m_commands.push_back(cmd);
 }
 
-void Command::Execute(HWND activeWindow) const
+CommandTypeEnum Command::getActualType() const
 {
-	if(ActualType() == CommandTypeEnum::Keys)
+	return m_typeEnum;
+}
+
+void Command::setActualType(CommandTypeEnum value)
+{
+	m_typeEnum = value;
+}
+
+std::vector<Command> Command::GetCommands() const
+{
+	return m_commands;
+}
+
+void Command::execute(HWND activeWindow) const
+{
+	if (getActualType() == CommandTypeEnum::Keys)
 	{
 		CSendKeys sk;
 		const QString name3 = GetName();
@@ -144,34 +158,35 @@ void Command::Execute(HWND activeWindow) const
 }
 
 
+// COMMAND LIST
+
 CommandList::CommandList(const Index& index)
 {
-	for(const auto& item : index._configurations)
+	for (const auto& item : index._configurations)
 	{
 		Command cmd(item);
-		cmd.ReadCommandFromFile();
-		for (const auto& cmd1: cmd.GetCommands())
+		cmd.readCommandFromFile();
+		for (const auto& cmd1 : cmd.GetCommands())
 		{
-			AddCommand(cmd1);
+			addCommand(cmd1);
 		}
 	}
 }
 
-void CommandList::AddCommand(Command cmd)
+void CommandList::addCommand(Command cmd)
 {
 	this->_commands.push_back(cmd);
 }
 
-std::vector<Command> CommandList::FindCommand(const QString& name) const
+std::vector<Command> CommandList::findCommand(const QString& name) const
 {
 	std::vector<Command> _result;
-	for(const Command& cmd : _commands)
+	for (const Command& cmd : _commands)
 	{
-		if(cmd.GetName().startsWith(name))
+		if (cmd.GetName().startsWith(name))
 		{
 			_result.push_back(cmd);
 		}
 	}
 	return _result;
 }
-

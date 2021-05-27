@@ -3,7 +3,7 @@
 
 
 
-BackEnd::BackEnd(QObject* parent) : QObject(parent),
+QuickTypeBL::QuickTypeBL(QObject* parent) : QObject(parent),
 								m_index(nullptr),
 								m_proc(nullptr),
 								m_command(""),
@@ -13,11 +13,16 @@ BackEnd::BackEnd(QObject* parent) : QObject(parent),
 	setCurrentProcess(result);
 }
 
-QString BackEnd::command() const{
+QList<Command> QuickTypeBL::commands() const
+{
+	return m_commands;
+}
+
+QString QuickTypeBL::command() const{
     return m_command;
 }
 
-void BackEnd::setCommand(const QString& command)
+void QuickTypeBL::setCommand(const QString& command)
 {
     if(command.isEmpty())
     {
@@ -34,7 +39,7 @@ void BackEnd::setCommand(const QString& command)
     if (command.isEmpty()) clearCommandList();
     m_command = command;
 
-    auto commands = m_index->FindCommand(command);
+    auto commands = m_index->findCommand(command);
     m_options.clear();
     m_commands.clear();
 	for (auto& cmd : commands)
@@ -56,32 +61,50 @@ void BackEnd::setCommand(const QString& command)
     emit onCountChanged();
 }
 
-QString BackEnd::currentProcess() const {
+QString QuickTypeBL::currentProcess() const
+{
     return m_currentProcess;
 }
 
-QList<QString> BackEnd::options() const
+QList<QString> QuickTypeBL::options() const
 {
     return m_options;
 }
 
-int BackEnd::selectedIndex() const
+int QuickTypeBL::selectedIndex() const
 {
     return m_selectedIndex;
 }
 
-void BackEnd::RegisterCmdIndex(CommandList* index)
+int QuickTypeBL::count() const
+{
+	return m_commands.count();
+}
+
+void QuickTypeBL::registerCmdIndex(CommandList* index)
 {
     m_index = index;
 }
 
-void BackEnd::setCurrentProcess(const QString& currentProcess) {
+QString QuickTypeBL::activeCommand()
+{
+	return (m_commands[selectedIndex()].GetName());
+}
+
+void QuickTypeBL::execCurrentCmd()
+{
+	if (selectedIndex() < 0) return;
+	if (selectedIndex() >= m_commands.count()) return;
+	m_commands[selectedIndex()].execute(m_activeWindow);
+}
+
+void QuickTypeBL::setCurrentProcess(const QString& currentProcess) {
     if (currentProcess == m_currentProcess) return;
     m_currentProcess = currentProcess;
     emit onCurrentProcessChanged();
 }
 
-void BackEnd::setSelectedIndex(int index)
+void QuickTypeBL::setSelectedIndex(int index)
 {
     if (m_selectedIndex == index) return;
     if (index >= count()) return;
@@ -90,14 +113,14 @@ void BackEnd::setSelectedIndex(int index)
     emit onOptionSelected(index);
 }
 
-void BackEnd::clearCommandList()
+void QuickTypeBL::clearCommandList()
 {
     m_options.clear();
     m_options.detach();
     setSelectedIndex(-1);
 }
 
-void BackEnd::handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook, uint eventType, HWND hwnd, LONG idObject,
+void QuickTypeBL::handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook, uint eventType, HWND hwnd, LONG idObject,
 	LONG idChild, DWORD dwEventThread, DWORD dwmsEventTime)
 {   
     setCurrentProcess(GetFullProcessName(hwnd));

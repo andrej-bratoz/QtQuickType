@@ -3,7 +3,7 @@
 #include "quicktype.h"
 
 
-extern BackEnd backend;
+extern QuickTypeBL quickType;
 HWINEVENTHOOK SetWindowsEventHook_ForegroundWindow(WINEVENTPROC proc)
 {
 	HWINEVENTHOOK hook = SetWinEventHook(EVENT_SYSTEM_FOREGROUND,
@@ -18,7 +18,7 @@ void CALLBACK WindowsEventHook_CallBack(HWINEVENTHOOK hWinEventHook,
 {
 	if(eventType == EVENT_SYSTEM_FOREGROUND)
 	{
-		backend.handleWindowsEventHookCallback(hWinEventHook,
+		quickType.handleWindowsEventHookCallback(hWinEventHook,
 			eventType,
 			hwnd,
 			idObject,

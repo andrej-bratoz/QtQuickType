@@ -9,11 +9,11 @@
 #include <Windows.h>
 #include <utility>
 #include <Psapi.h>
-#include "qt_objects.h"
+#include "xml_objects.h"
 
 
 
-class BackEnd : public QObject
+class QuickTypeBL : public QObject
 {
     Q_OBJECT
     Q_PROPERTY(QString command READ command WRITE setCommand NOTIFY onCommandChanged)
@@ -24,43 +24,29 @@ class BackEnd : public QObject
     QML_ELEMENT
 
 public:
-    explicit BackEnd(QObject* parent = nullptr);
-    //
-    QList<Command> commands() const { return m_commands; }
-    QString command() const;
-    QString currentProcess() const;
-    QList<QString> options() const;
-    int selectedIndex() const;
-    int count() const { return m_commands.count(); }
-    void RegisterCmdIndex(CommandList* index);
+    explicit QuickTypeBL(QObject* parent = nullptr);
 
-    Q_INVOKABLE QString activeCommand()
-    {
-	    return (m_commands[selectedIndex()].GetName());
-    }
+	// GETTERS
+    [[nodiscard]] QList<Command> commands() const;
+    [[nodiscard]] QString command() const;
+    [[nodiscard]] QString currentProcess() const;
+    [[nodiscard]] QList<QString> options() const;
+    [[nodiscard]] int selectedIndex() const;
+    [[nodiscard]] int count() const;
+    void registerCmdIndex(CommandList* index);
+    Q_INVOKABLE QString activeCommand();
+	Q_INVOKABLE void execCurrentCmd();
 
-	Q_INVOKABLE void ExecCurrentCmd()
-    {
-        if (selectedIndex() < 0) return;
-        if (selectedIndex() >= m_commands.count()) return;
-        m_commands[selectedIndex()].Execute(m_activeWindow);
-    }
-	
-	//
+	// SETTERS
     void setCommand(const QString& command);
     void setCurrentProcess(const QString& process);
     void setSelectedIndex(int index);
-	//
 
+	// HELPERS
     void clearCommandList();
+    void handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook,uint eventType,
+        HWND hWnd, LONG idObject, LONG idChild, DWORD eventThread, DWORD msEventTime);
 
-    void handleWindowsEventHookCallback(HWINEVENTHOOK hWinEventHook,
-        uint eventType, HWND hwnd, LONG idObject, LONG idChild, DWORD dwEventThread,
-        DWORD dwmsEventTime);
-		
-
-	
-  
 signals:
     void onOptionsChanged();
     void onCommandChanged();

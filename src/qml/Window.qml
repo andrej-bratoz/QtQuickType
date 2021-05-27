@@ -29,20 +29,13 @@ ApplicationWindow {
             height: 30
             TextField {
                 width: parent.width *0.95
-                text:backEnd.command
+                text:quickType.command
                 font.family: "Consolas"
-                onTextChanged: {backEnd.command = text}
                 anchors.centerIn: r1
-                Keys.onDownPressed : {
-                    backEnd.selectedIndex++
-                }
-                Keys.onUpPressed : {
-                    backEnd.selectedIndex--
-                }
-                 Keys.onReturnPressed : {
-                    backEnd.ExecCurrentCmd();
-                }
-                
+                onTextChanged: {quickType.command = text}
+                Keys.onDownPressed : {quickType.selectedIndex++}
+                Keys.onUpPressed : {quickType.selectedIndex--}
+                Keys.onReturnPressed : {quickType.execCurrentCmd();}   
             }
         }
 
@@ -55,7 +48,7 @@ ApplicationWindow {
             Label {
                 width: parent.width *0.95
                 anchors.centerIn: r2
-                text : backEnd.currentProcess
+                text : quickType.currentProcess
                 color : "white"
             }
         }
@@ -67,16 +60,14 @@ ApplicationWindow {
             color: "transparent"
             Layout.fillWidth: true
             Layout.fillHeight: true
-            ResultList {
+            ResultView {
                 id: resultList
                 height: parent.height
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                model: backEnd.options
-                viewModel : backEnd
+                model: quickType.options
+                viewModel : quickType
             }
         }
-
-
     }
 }

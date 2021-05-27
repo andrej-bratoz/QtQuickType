@@ -16,7 +16,7 @@ Frame {
         model: root.model
         implicitWidth: parent.width * 0.95
         anchors.centerIn: parent
-        currentIndex : backEnd.selectedIndex
+        currentIndex : quickType.selectedIndex
         implicitHeight: 200
         topMargin: 5
         clip: true
